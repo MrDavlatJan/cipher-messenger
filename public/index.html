@@ -2,297 +2,194 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Cipher — Messenger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg: #0c0c0f;
-  --surface: #13131a;
-  --surface2: #1c1c26;
-  --surface3: #24242f;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.1);
-  --accent: #6366f1;
-  --accent-dim: rgba(99,102,241,0.15);
-  --accent-hover: #818cf8;
-  --text: #ededf5;
-  --text-2: #9191a4;
-  --text-3: #5a5a6e;
-  --danger: #ef4444;
-  --success: #10b981;
-  --radius: 14px;
-  --radius-sm: 8px;
-  --sidebar: 300px;
+  --bg: #0c0c0f; --surface: #13131a; --surface2: #1c1c26; --surface3: #24242f;
+  --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.1);
+  --accent: #6366f1; --accent-dim: rgba(99,102,241,0.15); --accent-hover: #818cf8;
+  --text: #ededf5; --text-2: #9191a4; --text-3: #5a5a6e;
+  --danger: #ef4444; --success: #10b981;
+  --radius: 14px; --radius-sm: 8px; --sidebar: 300px;
 }
-
 html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Figtree', sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
-/* ─── Auth Screen ─── */
-#auth-screen {
-  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--bg);
-  background-image: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 60%),
-                    radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.06) 0%, transparent 50%);
-  z-index: 100;
-}
-
-.auth-box {
-  width: 100%; max-width: 400px; padding: 0 24px;
-}
-
-.auth-logo {
-  font-size: 28px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 8px;
-  background: linear-gradient(135deg, #fff 0%, #9b9bdb 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+/* ── Auth ── */
+#auth-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--bg); background-image: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.06) 0%, transparent 50%); z-index: 100; overflow-y: auto; }
+.auth-box { width: 100%; max-width: 400px; padding: 24px; }
+.auth-logo { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 8px; background: linear-gradient(135deg, #fff 0%, #9b9bdb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .auth-logo span { color: var(--accent); -webkit-text-fill-color: var(--accent); }
-
-.auth-sub { color: var(--text-2); font-size: 14px; margin-bottom: 40px; }
-
-.auth-tabs { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 1px solid var(--border2); }
-.auth-tab {
-  flex: 1; padding: 10px; text-align: center; cursor: pointer; font-size: 14px; font-weight: 500;
-  color: var(--text-2); border-bottom: 2px solid transparent; transition: all .2s; margin-bottom: -1px;
-}
+.auth-sub { color: var(--text-2); font-size: 14px; margin-bottom: 32px; }
+.auth-tabs { display: flex; margin-bottom: 24px; border-bottom: 1px solid var(--border2); }
+.auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-2); border-bottom: 2px solid transparent; transition: all .2s; margin-bottom: -1px; }
 .auth-tab.active { color: var(--text); border-color: var(--accent); }
-
-.field { margin-bottom: 14px; }
+.field { margin-bottom: 12px; }
 .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text-2); margin-bottom: 6px; letter-spacing: .04em; text-transform: uppercase; }
-.field input {
-  width: 100%; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 15px;
-  outline: none; transition: border-color .2s;
-}
+.field label .opt { color: var(--text-3); font-size: 11px; text-transform: none; font-weight: 400; }
+.field input { width: 100%; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 15px; outline: none; transition: border-color .2s; }
 .field input:focus { border-color: var(--accent); }
 .field input::placeholder { color: var(--text-3); }
-
-.btn {
-  width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: var(--radius-sm);
-  color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
-  transition: all .2s; margin-top: 6px; letter-spacing: .01em;
-}
+.field-row { display: flex; gap: 10px; }
+.field-row .field { flex: 1; }
+.btn { width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s; margin-top: 6px; }
 .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 .btn.secondary { background: var(--surface3); color: var(--text); }
 .btn.secondary:hover { background: var(--surface2); }
+.btn.danger { background: var(--danger); }
 .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.error-msg { color: var(--danger); font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; }
 
-.error-msg { color: var(--danger); font-size: 13px; margin-top: 10px; text-align: center; }
+/* ── App ── */
+#app { display: none; flex; height: 100vh; position: relative; overflow: hidden; }
 
-/* ─── App Layout ─── */
-#app { display: flex; height: 100vh; display: none; }
-
-/* ─── Sidebar ─── */
-.sidebar {
-  width: var(--sidebar); min-width: var(--sidebar);
-  background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-}
-
-.sidebar-header {
-  padding: 18px 16px 14px; display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-
+/* ── Sidebar ── */
+.sidebar { width: var(--sidebar); min-width: var(--sidebar); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: transform .25s ease; }
+.sidebar-header { padding: 18px 16px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .logo { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
 .logo span { color: var(--accent); }
-
 .header-actions { display: flex; gap: 4px; }
-.icon-btn {
-  width: 34px; height: 34px; border-radius: 8px; border: none;
-  background: transparent; color: var(--text-2); cursor: pointer; display: flex;
-  align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0;
-}
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; border: none; background: transparent; color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; }
 .icon-btn:hover { background: var(--surface2); color: var(--text); }
 .icon-btn svg { width: 18px; height: 18px; }
-
-.search-wrap { padding: 12px 12px 0; }
-.search-input {
-  width: 100%; padding: 9px 12px 9px 36px; background: var(--surface2);
-  border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text);
-  font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s;
-  position: relative;
-}
+.search-wrap { padding: 12px 12px 0; position: relative; }
+.search-wrap-inner { position: relative; }
+.search-input { width: 100%; padding: 9px 12px 9px 36px; background: var(--surface2); border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s; }
 .search-input:focus { border-color: var(--accent); }
 .search-input::placeholder { color: var(--text-3); }
-.search-wrap-inner { position: relative; }
-.search-icon {
-  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-  color: var(--text-3); pointer-events: none;
-}
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-3); pointer-events: none; }
 .search-icon svg { width: 16px; height: 16px; }
-
-.search-results {
-  position: absolute; left: 12px; right: 12px; top: calc(100% + 4px);
-  background: var(--surface3); border: 1px solid var(--border2); border-radius: var(--radius-sm);
-  overflow: hidden; z-index: 10; display: none;
-}
+.search-results { position: absolute; left: 0; right: 0; top: calc(100% + 4px); background: var(--surface3); border: 1px solid var(--border2); border-radius: var(--radius-sm); overflow: hidden; z-index: 10; display: none; }
 .search-results.show { display: block; }
-.search-result-item {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; transition: background .15s;
-}
+.search-result-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; transition: background .15s; }
 .search-result-item:hover { background: var(--surface2); }
-
 .chat-list { flex: 1; overflow-y: auto; padding: 8px 8px 0; }
 .chat-list::-webkit-scrollbar { width: 4px; }
-.chat-list::-webkit-scrollbar-track { background: transparent; }
 .chat-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-
-.chat-item {
-  display: flex; align-items: center; gap: 11px; padding: 10px 10px; border-radius: var(--radius-sm);
-  cursor: pointer; transition: background .15s; position: relative;
-}
+.chat-item { display: flex; align-items: center; gap: 11px; padding: 10px; border-radius: var(--radius-sm); cursor: pointer; transition: background .15s; }
 .chat-item:hover { background: var(--surface2); }
 .chat-item.active { background: var(--accent-dim); }
-
-.avatar {
-  width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center;
-  justify-content: center; font-weight: 600; font-size: 16px; color: #fff; flex-shrink: 0;
-  text-transform: uppercase;
-}
+.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; color: #fff; flex-shrink: 0; text-transform: uppercase; }
 .avatar.sm { width: 32px; height: 32px; font-size: 12px; }
+.avatar.lg { width: 52px; height: 52px; font-size: 20px; }
 .avatar.group { font-size: 18px; }
-
 .chat-info { flex: 1; min-width: 0; }
-.chat-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-preview { font-size: 12px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-.chat-time { font-size: 11px; color: var(--text-3); flex-shrink: 0; }
-
-.sidebar-bottom {
-  border-top: 1px solid var(--border); padding: 12px 14px; display: flex; align-items: center; gap: 10px;
-}
+.chat-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.chat-time { font-size: 11px; color: var(--text-3); }
+.unread-badge { background: #ef4444; color: #fff; font-size: 11px; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+.sidebar-bottom { border-top: 1px solid var(--border); padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background .15s; }
+.sidebar-bottom:hover { background: var(--surface2); }
 .user-info { flex: 1; min-width: 0; }
 .user-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-status { font-size: 12px; color: var(--success); }
+.logout-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; color: var(--text-3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.logout-btn:hover { background: var(--surface2); color: var(--danger); }
+.no-chats { text-align: center; padding: 40px 20px; color: var(--text-3); font-size: 13px; }
 
-/* ─── Main Chat ─── */
+/* ── Main ── */
 .main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg); }
-
-.chat-header {
-  padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
-  background: var(--surface); flex-shrink: 0;
-}
+.chat-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--surface); flex-shrink: 0; }
 .chat-header-info { flex: 1; min-width: 0; }
 .chat-header-name { font-size: 16px; font-weight: 600; }
 .chat-header-sub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
-
-/* Empty state */
-.empty-state {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: var(--text-3); gap: 12px;
-}
+.back-btn { display: none; width: 34px; height: 34px; border-radius: 8px; border: none; background: transparent; color: var(--text-2); cursor: pointer; align-items: center; justify-content: center; flex-shrink: 0; }
+.back-btn svg { width: 20px; height: 20px; }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-3); gap: 12px; }
 .empty-state svg { width: 48px; height: 48px; opacity: .3; }
-.empty-state p { font-size: 15px; }
-
-/* Messages */
 .messages-wrap { flex: 1; overflow-y: auto; padding: 20px 20px 8px; display: flex; flex-direction: column; gap: 2px; }
 .messages-wrap::-webkit-scrollbar { width: 4px; }
 .messages-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-
 .msg-group { margin-bottom: 14px; }
 .msg-sender-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .msg-sender-name { font-size: 12px; font-weight: 600; }
 .msg-sender-time { font-size: 11px; color: var(--text-3); }
-
 .msg-bubble-wrap { display: flex; flex-direction: column; gap: 3px; }
-.msg-bubble {
-  display: inline-block; max-width: 480px; padding: 9px 14px;
-  border-radius: 18px; font-size: 14px; line-height: 1.55; word-break: break-word;
-}
-
+.msg-bubble { display: inline-flex; align-items: flex-end; gap: 5px; max-width: 480px; padding: 9px 14px; border-radius: 18px; font-size: 14px; line-height: 1.55; word-break: break-word; }
+.msg-bubble-text { flex: 1; }
 .msg-group.mine { align-items: flex-end; }
 .msg-group.mine .msg-bubble-wrap { align-items: flex-end; }
 .msg-group.mine .msg-bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 6px; }
 .msg-group.mine .msg-sender-row { flex-direction: row-reverse; }
-
 .msg-group.other .msg-bubble { background: var(--surface2); color: var(--text); border-bottom-left-radius: 6px; }
 .msg-group.other .msg-bubble-wrap { align-items: flex-start; }
 
-.msg-time { font-size: 10px; color: var(--text-3); padding: 0 4px; }
+/* Status ticks */
+.msg-status { flex-shrink: 0; display: flex; align-items: center; margin-bottom: 1px; }
+.msg-status svg { width: 14px; height: 14px; }
+.status-sent { opacity: 0.5; }
+.status-delivered { opacity: 0.8; }
+.status-read { color: #7dd3fc; }
 
-/* Typing indicator */
 .typing-indicator { font-size: 12px; color: var(--text-2); padding: 4px 20px; min-height: 24px; flex-shrink: 0; }
-
-/* Input area */
-.input-area {
-  padding: 12px 16px 16px; border-top: 1px solid var(--border); background: var(--surface);
-  flex-shrink: 0;
-}
+.input-area { padding: 12px 16px 16px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
 .input-row { display: flex; gap: 10px; align-items: flex-end; }
-.msg-input {
-  flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius);
-  padding: 12px 16px; color: var(--text); font-family: inherit; font-size: 14px; outline: none;
-  resize: none; max-height: 140px; line-height: 1.5; transition: border-color .2s; min-height: 44px;
-}
+.msg-input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px 16px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; resize: none; max-height: 140px; line-height: 1.5; transition: border-color .2s; min-height: 44px; }
 .msg-input:focus { border-color: var(--accent); }
 .msg-input::placeholder { color: var(--text-3); }
-
-.send-btn {
-  width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--accent);
-  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: all .15s;
-}
+.send-btn { width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--accent); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
 .send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
 .send-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 .send-btn svg { width: 18px; height: 18px; }
 
-/* ─── Modal ─── */
-.modal-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; z-index: 50; display: none;
-}
+/* ── Modal ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
 .modal-backdrop.show { display: flex; }
-.modal {
-  background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius);
-  padding: 28px; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto;
-  animation: modal-in .2s ease;
-}
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; animation: modal-in .2s ease; }
 @keyframes modal-in { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 .modal-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
-
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 .user-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-.chip {
-  display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px;
-  background: var(--accent-dim); border: 1px solid rgba(99,102,241,.3); border-radius: 20px;
-  font-size: 13px; color: var(--accent-hover);
-}
+.chip { display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px; background: var(--accent-dim); border: 1px solid rgba(99,102,241,.3); border-radius: 20px; font-size: 13px; color: var(--accent-hover); }
 .chip-remove { cursor: pointer; color: var(--text-2); line-height: 1; font-size: 16px; }
 .chip-remove:hover { color: var(--danger); }
-
-.member-list { margin-top: 8px; max-height: 180px; overflow-y: auto; }
-.member-item {
-  display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; border-radius: 6px; transition: background .15s;
-}
-.member-item:hover { background: var(--surface2); padding: 8px 8px; margin: 0 -8px; }
-
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .modal-actions .btn { flex: 1; }
 
-/* ─── Date divider ─── */
+/* ── Date divider ── */
 .date-divider { text-align: center; margin: 12px 0 8px; }
 .date-divider span { font-size: 11px; color: var(--text-3); background: var(--surface2); padding: 3px 10px; border-radius: 20px; }
 
-/* Logout btn */
-.logout-btn {
-  width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent;
-  color: var(--text-3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s;
+/* ── Profile panel ── */
+.profile-panel { position: fixed; inset: 0; background: var(--bg); z-index: 60; display: none; flex-direction: column; overflow-y: auto; }
+.profile-panel.show { display: flex; }
+.profile-header { padding: 18px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+.profile-body { padding: 28px 20px; flex: 1; max-width: 480px; margin: 0 auto; width: 100%; }
+.profile-avatar-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 32px; }
+.profile-section { margin-bottom: 28px; }
+.profile-section-title { font-size: 11px; font-weight: 600; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.profile-save-btn { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 11px 24px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; width: 100%; }
+.profile-save-btn:hover { background: var(--accent-hover); }
+.profile-save-btn:disabled { opacity: .5; cursor: not-allowed; }
+.profile-msg { font-size: 13px; margin-top: 10px; min-height: 18px; text-align: center; }
+.profile-msg.ok { color: var(--success); }
+.profile-msg.err { color: var(--danger); }
+
+/* ── Toast ── */
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface3); border: 1px solid var(--border2); color: var(--text); padding: 12px 20px; border-radius: 12px; font-size: 14px; z-index: 999; transition: transform .3s ease; pointer-events: none; white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  :root { --sidebar: 100vw; }
+  .sidebar { position: fixed; inset: 0; z-index: 10; width: 100vw; min-width: 100vw; transform: translateX(0); }
+  .sidebar.hidden { transform: translateX(-100%); }
+  .main { position: fixed; inset: 0; z-index: 11; transform: translateX(100%); transition: transform .25s ease; }
+  .main.show { transform: translateX(0); }
+  .back-btn { display: flex; }
+  .msg-bubble { max-width: calc(100vw - 80px); }
 }
-.logout-btn:hover { background: var(--surface2); color: var(--danger); }
-
-/* Scrollbar for modal */
-.modal::-webkit-scrollbar, .member-list::-webkit-scrollbar { width: 4px; }
-.modal::-webkit-scrollbar-thumb, .member-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-
-.no-chats { text-align: center; padding: 40px 20px; color: var(--text-3); font-size: 13px; }
 </style>
 </head>
 <body>
 
-<!-- ── Auth Screen ─────────────────────────────────────────── -->
+<!-- Auth -->
 <div id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">cipher<span>.</span></div>
@@ -301,15 +198,17 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
       <div class="auth-tab active" onclick="switchTab('login')">Sign in</div>
       <div class="auth-tab" onclick="switchTab('register')">Create account</div>
     </div>
-
     <div id="login-form">
       <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
       <div class="field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
       <button class="btn" onclick="doLogin()">Sign in</button>
       <div class="error-msg" id="login-error"></div>
     </div>
-
     <div id="register-form" style="display:none">
+      <div class="field-row">
+        <div class="field"><label>First name</label><input type="text" id="reg-firstname" placeholder="Alex" autocomplete="given-name"></div>
+        <div class="field"><label>Last name <span class="opt">(optional)</span></label><input type="text" id="reg-lastname" placeholder="Smith" autocomplete="family-name"></div>
+      </div>
       <div class="field">
         <label>Username</label>
         <input type="text" id="reg-username" placeholder="your_username" autocomplete="username" oninput="checkUsername(this.value)">
@@ -323,10 +222,9 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   </div>
 </div>
 
-<!-- ── App ─────────────────────────────────────────────────── -->
+<!-- App -->
 <div id="app">
-  <!-- Sidebar -->
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="logo">cipher<span>.</span></div>
       <div class="header-actions">
@@ -338,40 +236,36 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
         </button>
       </div>
     </div>
-
-    <div class="search-wrap" style="position:relative">
+    <div class="search-wrap">
       <div class="search-wrap-inner">
         <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-        <input class="search-input" id="user-search" placeholder="Search users..." oninput="searchUsers(this.value)" onfocus="this.nextElementSibling.classList.add('show')" onblur="setTimeout(()=>document.getElementById('search-results').classList.remove('show'),200)">
-        <div class="search-results" id="search-results"></div>
+        <input class="search-input" id="user-search" placeholder="Search users..." oninput="searchUsers(this.value)" onfocus="document.getElementById('search-results-main').classList.add('show')" onblur="setTimeout(()=>document.getElementById('search-results-main').classList.remove('show'),200)">
+        <div class="search-results" id="search-results-main"></div>
       </div>
     </div>
-
-    <div class="chat-list" id="chat-list">
-      <div class="no-chats">No conversations yet.<br>Search for a user to start chatting.</div>
-    </div>
-
-    <div class="sidebar-bottom">
+    <div class="chat-list" id="chat-list"><div class="no-chats">No conversations yet.<br>Search for a user to start chatting.</div></div>
+    <div class="sidebar-bottom" onclick="openProfile()">
       <div class="avatar sm" id="my-avatar"></div>
       <div class="user-info">
-        <div class="user-name" id="my-username"></div>
+        <div class="user-name" id="my-display-name"></div>
         <div class="user-status">● Online</div>
       </div>
-      <button class="logout-btn" onclick="logout()" title="Sign out">
+      <button class="logout-btn" onclick="event.stopPropagation();logout()" title="Sign out">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main" id="main">
     <div class="empty-state" id="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <p>Select a conversation</p>
     </div>
-
-    <div id="chat-view" style="display:none; flex-direction:column; height:100%">
+    <div id="chat-view" style="display:none;flex-direction:column;height:100%">
       <div class="chat-header">
+        <button class="back-btn" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
         <div class="avatar" id="chat-avatar"></div>
         <div class="chat-header-info">
           <div class="chat-header-name" id="chat-header-name"></div>
@@ -382,10 +276,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
       <div class="typing-indicator" id="typing-indicator"></div>
       <div class="input-area">
         <div class="input-row">
-          <textarea class="msg-input" id="msg-input" placeholder="Message..." rows="1"
-            onkeydown="handleKey(event)" oninput="autoResize(this); sendTyping(true)"
-            onblur="sendTyping(false)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+          <textarea class="msg-input" id="msg-input" placeholder="Message..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this);sendTyping(true)" onblur="sendTyping(false)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
@@ -394,14 +286,50 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   </div>
 </div>
 
-<!-- ── New DM Modal ─────────────────────────────────────────── -->
+<!-- Profile Panel -->
+<div class="profile-panel" id="profile-panel">
+  <div class="profile-header">
+    <button class="icon-btn" onclick="closeProfile()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span style="font-size:17px;font-weight:600">Profile settings</span>
+  </div>
+  <div class="profile-body">
+    <div class="profile-avatar-wrap">
+      <div class="avatar lg" id="profile-avatar"></div>
+      <div style="font-size:13px;color:var(--text-2)" id="profile-username-display"></div>
+    </div>
+    <div class="profile-section">
+      <div class="profile-section-title">Name</div>
+      <div class="field-row">
+        <div class="field"><label>First name</label><input type="text" id="pf-firstname" placeholder="Alex"></div>
+        <div class="field"><label>Last name <span class="opt">(optional)</span></label><input type="text" id="pf-lastname" placeholder="Smith"></div>
+      </div>
+    </div>
+    <div class="profile-section">
+      <div class="profile-section-title">Username</div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="pf-username" placeholder="your_username" oninput="checkProfileUsername(this.value)">
+        <div id="pf-username-hint" style="font-size:12px;margin-top:5px;min-height:16px"></div>
+      </div>
+    </div>
+    <button class="profile-save-btn" onclick="saveProfile()" id="pf-save-btn">Save changes</button>
+    <div class="profile-msg" id="pf-msg"></div>
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border)">
+      <button class="btn danger" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<!-- DM Modal -->
 <div class="modal-backdrop" id="dm-modal">
-  <div class="modal" onclick.stop>
+  <div class="modal">
     <div class="modal-title">New message</div>
     <div class="field" style="position:relative">
       <label>Search user</label>
       <input type="text" id="dm-search" placeholder="Username..." oninput="searchDMUsers(this.value)" autocomplete="off">
-      <div class="search-results" id="dm-results" style="position:absolute;left:0;right:0;top:calc(100% + 4px)"></div>
+      <div class="search-results" id="dm-results" style="position:absolute;left:0;right:0;top:calc(100%+4px)"></div>
     </div>
     <div id="dm-selected" style="margin-top:12px"></div>
     <div class="modal-actions">
@@ -411,18 +339,15 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   </div>
 </div>
 
-<!-- ── New Group Modal ─────────────────────────────────────── -->
+<!-- Group Modal -->
 <div class="modal-backdrop" id="group-modal">
   <div class="modal">
     <div class="modal-title">New group</div>
-    <div class="field">
-      <label>Group name</label>
-      <input type="text" id="group-name" placeholder="My Group">
-    </div>
+    <div class="field"><label>Group name</label><input type="text" id="group-name" placeholder="My Group"></div>
     <div class="field" style="position:relative">
       <label>Add members</label>
       <input type="text" id="group-search" placeholder="Search username..." oninput="searchGroupUsers(this.value)" autocomplete="off">
-      <div class="search-results" id="group-results" style="position:absolute;left:0;right:0;top:calc(100% + 4px)"></div>
+      <div class="search-results" id="group-results" style="position:absolute;left:0;right:0;top:calc(100%+4px)"></div>
     </div>
     <div class="user-chips" id="group-chips"></div>
     <div class="modal-actions">
@@ -432,535 +357,531 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   </div>
 </div>
 
+<div id="toast"></div>
+
 <script>
-// ─── State ────────────────────────────────────────────────────────────────────
+// ── State ──────────────────────────────────────────────────────────────────────
 const state = {
   token: localStorage.getItem('token'),
   user: JSON.parse(localStorage.getItem('user') || 'null'),
-  chats: [],
-  activeChatId: null,
-  messages: [],
-  dmTarget: null,
-  groupMembers: [],
-  typingTimers: {},
-  typingUsers: {},
+  chats: [], activeChatId: null, messages: [],
+  dmTarget: null, groupMembers: [],
+  typingTimers: {}, typingUsers: {},
+  unread: {},
 };
+let ws = null, typingTimeout = null;
 
-let ws = null;
-let typingTimeout = null;
-
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-window.onload = () => {
-  if (state.token && state.user) bootApp();
-};
-
-function bootApp() {
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('my-username').textContent = state.user.username;
-  setAvatar('my-avatar', state.user.username, state.user.avatar_color);
-  connectWS();
-  loadChats();
+// ── Audio (notification sound via Web Audio API) ───────────────────────────────
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playNotifSound() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.3);
+  } catch {}
 }
 
-function setAvatar(elId, name, color, isGroup = false) {
-  const el = document.getElementById(elId);
-  if (!el) return;
+// ── Boot ───────────────────────────────────────────────────────────────────────
+window.onload = () => { if (state.token && state.user) bootApp(); };
+
+async function bootApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  updateSidebarUser();
+  connectWS();
+  await loadChats();
+  try {
+    const check = await api('/api/me/username-check', null, 'GET');
+    if (check.banned) {
+      alert('Your username contains prohibited words. You have been signed out. Please create a new account with an appropriate username.');
+      logout();
+    }
+  } catch {}
+}
+
+function updateSidebarUser() {
+  if (!state.user) return;
+  const dn = state.user.first_name ? (state.user.first_name + (state.user.last_name ? ' ' + state.user.last_name : '')) : state.user.username;
+  document.getElementById('my-display-name').textContent = dn;
+  setAvatar('my-avatar', state.user.first_name || state.user.username, state.user.avatar_color);
+}
+function setAvatar(id, name, color, isGroup=false) {
+  const el = document.getElementById(id); if (!el) return;
   el.style.background = color || '#6366f1';
   el.textContent = isGroup ? '◆' : (name?.[0] || '?').toUpperCase();
 }
-
-function avatarHTML(name, color, isGroup = false, sm = false) {
-  return `<div class="avatar${sm ? ' sm' : ''}${isGroup ? ' group' : ''}" style="background:${color || '#6366f1'}">${isGroup ? '◆' : (name?.[0] || '?').toUpperCase()}</div>`;
+function avatarHTML(name, color, isGroup=false, sm=false) {
+  return `<div class="avatar${sm?' sm':''}${isGroup?' group':''}" style="background:${color||'#6366f1'}">${isGroup?'◆':(name?.[0]||'?').toUpperCase()}</div>`;
+}
+function displayName(u) {
+  if (!u) return 'Unknown';
+  return u.first_name ? (u.first_name + (u.last_name ? ' '+u.last_name : '')) : u.username;
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
+// ── Status icon SVGs ───────────────────────────────────────────────────────────
+function statusIcon(status) {
+  if (status === 'read') {
+    // Eye icon
+    return `<span class="msg-status status-read" title="Read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>`;
+  }
+  if (status === 'delivered') {
+    // Double check
+    return `<span class="msg-status status-delivered" title="Delivered"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 12 5 16 13 8"/><polyline points="7 12 11 16 19 8"/></svg></span>`;
+  }
+  // sent — single check
+  return `<span class="msg-status status-sent" title="Sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"/></svg></span>`;
+}
+
+// ── Auth ───────────────────────────────────────────────────────────────────────
 function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'login')));
-  document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
-  document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0)===(tab==='login')));
+  document.getElementById('login-form').style.display = tab==='login'?'':'none';
+  document.getElementById('register-form').style.display = tab==='register'?'':'none';
 }
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(e); }
 
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   const err = document.getElementById('login-error');
   err.textContent = '';
-  if (!email || !password) { err.textContent = 'Please fill all fields'; return; }
+  if (!email||!password){err.textContent='Please fill all fields';return;}
+  if (!isValidEmail(email)){err.textContent='Please enter a valid email (e.g. you@example.com)';return;}
   try {
-    const r = await api('/api/login', { email, password });
-    localStorage.setItem('token', r.token);
-    localStorage.setItem('user', JSON.stringify(r.user));
-    state.token = r.token; state.user = r.user;
-    bootApp();
-  } catch (e) { err.textContent = e.message; }
+    const r = await api('/api/login',{email,password});
+    localStorage.setItem('token',r.token); localStorage.setItem('user',JSON.stringify(r.user));
+    state.token=r.token; state.user=r.user; bootApp();
+  } catch(e){err.textContent=e.message;}
 }
 
 async function doRegister() {
-  const username = document.getElementById('reg-username').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const err = document.getElementById('register-error');
-  err.textContent = '';
-  if (!username || !email || !password) { err.textContent = 'Please fill all fields'; return; }
+  const first_name=document.getElementById('reg-firstname').value.trim();
+  const last_name=document.getElementById('reg-lastname').value.trim();
+  const username=document.getElementById('reg-username').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const password=document.getElementById('reg-password').value;
+  const err=document.getElementById('register-error');
+  err.textContent='';
+  if (!first_name){err.textContent='First name is required';return;}
+  if (!username||!email||!password){err.textContent='Please fill all required fields';return;}
+  if (!isValidEmail(email)){err.textContent='Please enter a valid email (e.g. you@example.com)';return;}
   try {
-    const r = await api('/api/register', { username, email, password });
-    localStorage.setItem('token', r.token);
-    localStorage.setItem('user', JSON.stringify(r.user));
-    state.token = r.token; state.user = r.user;
-    bootApp();
-  } catch (e) { err.textContent = e.message; }
+    const r = await api('/api/register',{username,email,password,first_name,last_name:last_name||undefined});
+    localStorage.setItem('token',r.token); localStorage.setItem('user',JSON.stringify(r.user));
+    state.token=r.token; state.user=r.user; bootApp();
+  } catch(e){err.textContent=e.message;}
 }
 
 function logout() {
   localStorage.removeItem('token'); localStorage.removeItem('user');
-  if (ws) ws.close();
-  location.reload();
+  if (ws) ws.close(); location.reload();
 }
 
-// ─── API helper ───────────────────────────────────────────────────────────────
 async function api(url, body, method) {
   const opts = {
-    method: body ? (method || 'POST') : 'GET',
-    headers: { 'Content-Type': 'application/json', ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}) },
+    method: body ? (method||'POST') : (method||'GET'),
+    headers: {'Content-Type':'application/json', ...(state.token?{Authorization:`Bearer ${state.token}`}:{})},
   };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.error || 'Something went wrong');
+  if (body) opts.body=JSON.stringify(body);
+  const r=await fetch(url,opts); const data=await r.json();
+  if (!r.ok) throw new Error(data.error||'Something went wrong');
   return data;
 }
 
-// ─── WebSocket ────────────────────────────────────────────────────────────────
+// ── WebSocket ──────────────────────────────────────────────────────────────────
 function connectWS() {
-  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const proto = location.protocol==='https:'?'wss:':'ws:';
   ws = new WebSocket(`${proto}//${location.host}`);
-
-  ws.onopen = () => ws.send(JSON.stringify({ type: 'auth', token: state.token }));
-
+  ws.onopen = () => ws.send(JSON.stringify({type:'auth',token:state.token}));
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
-    if (data.type === 'message') {
+
+    if (data.type==='message') {
       const msg = data.message;
-      // Update chat list preview
-      const chat = state.chats.find(c => c.id === msg.chat_id);
-      if (chat) { chat.last_message = msg.content; chat.last_message_at = msg.created_at; chat.last_sender = msg.username; renderChatList(); }
-      // Append to messages if active chat
-      if (state.activeChatId === msg.chat_id) {
+      let chat = state.chats.find(c=>c.id===msg.chat_id);
+      if (!chat) { loadChats(); return; }
+      chat.last_message=msg.content; chat.last_message_at=msg.created_at; chat.last_sender=msg.username;
+
+      if (state.activeChatId===msg.chat_id) {
         state.messages.push(msg);
         appendMessage(msg, true);
-      }
-    }
-    if (data.type === 'typing') {
-      const { chat_id, user_id, username, is_typing } = data;
-      if (chat_id !== state.activeChatId) return;
-      if (is_typing) {
-        state.typingUsers[user_id] = username;
-        clearTimeout(state.typingTimers[user_id]);
-        state.typingTimers[user_id] = setTimeout(() => { delete state.typingUsers[user_id]; renderTyping(); }, 3000);
+        // immediately send read receipt
+        sendRead(msg.chat_id);
       } else {
-        delete state.typingUsers[user_id];
-        clearTimeout(state.typingTimers[user_id]);
+        state.unread[msg.chat_id]=(state.unread[msg.chat_id]||0)+1;
+        playNotifSound();
+        const sn = msg.first_name||msg.username;
+        showToast(`💬 ${sn}: ${msg.content.slice(0,50)}${msg.content.length>50?'…':''}`);
       }
+      state.chats.sort((a,b)=>(b.last_message_at||b.created_at)-(a.last_message_at||a.created_at));
+      renderChatList();
+    }
+
+    if (data.type==='status_update') {
+      // Update status of a message in our local state + DOM
+      const { message_id, status } = data;
+      const msg = state.messages.find(m=>m.id===message_id);
+      if (msg) msg.status=status;
+      updateMsgStatusDOM(message_id, status);
+    }
+
+    if (data.type==='typing') {
+      const {chat_id,user_id,username,is_typing}=data;
+      if (chat_id!==state.activeChatId) return;
+      if (is_typing) {
+        state.typingUsers[user_id]=username;
+        clearTimeout(state.typingTimers[user_id]);
+        state.typingTimers[user_id]=setTimeout(()=>{delete state.typingUsers[user_id];renderTyping();},3000);
+      } else { delete state.typingUsers[user_id]; clearTimeout(state.typingTimers[user_id]); }
       renderTyping();
     }
   };
-
   ws.onclose = () => setTimeout(connectWS, 3000);
 }
 
 function sendTyping(isTyping) {
-  if (!state.activeChatId || !ws || ws.readyState !== 1) return;
+  if (!state.activeChatId||!ws||ws.readyState!==1) return;
   if (isTyping) {
-    if (typingTimeout) return; // already sent
-    ws.send(JSON.stringify({ type: 'typing', chat_id: state.activeChatId, is_typing: true }));
-    typingTimeout = setTimeout(() => { typingTimeout = null; }, 2000);
-  } else {
-    clearTimeout(typingTimeout); typingTimeout = null;
-    ws.send(JSON.stringify({ type: 'typing', chat_id: state.activeChatId, is_typing: false }));
-  }
+    if (typingTimeout) return;
+    ws.send(JSON.stringify({type:'typing',chat_id:state.activeChatId,is_typing:true}));
+    typingTimeout=setTimeout(()=>{typingTimeout=null;},2000);
+  } else { clearTimeout(typingTimeout); typingTimeout=null; ws.send(JSON.stringify({type:'typing',chat_id:state.activeChatId,is_typing:false})); }
+}
+
+function sendRead(chatId) {
+  if (ws&&ws.readyState===1) ws.send(JSON.stringify({type:'read',chat_id:chatId}));
 }
 
 function renderTyping() {
-  const names = Object.values(state.typingUsers);
-  const el = document.getElementById('typing-indicator');
-  if (!el) return;
-  el.textContent = names.length ? `${names.join(', ')} ${names.length === 1 ? 'is' : 'are'} typing...` : '';
+  const names=Object.values(state.typingUsers);
+  const el=document.getElementById('typing-indicator'); if (!el) return;
+  el.textContent=names.length?`${names.join(', ')} ${names.length===1?'is':'are'} typing...`:'';
 }
 
-// ─── Chats ────────────────────────────────────────────────────────────────────
+// ── Toast ──────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),4000);
+}
+
+// ── Chats ──────────────────────────────────────────────────────────────────────
 async function loadChats() {
-  state.chats = await api('/api/chats', null, 'GET');
+  state.chats=await api('/api/chats',null,'GET');
   renderChatList();
 }
 
 function renderChatList() {
-  const el = document.getElementById('chat-list');
-  if (!state.chats.length) {
-    el.innerHTML = '<div class="no-chats">No conversations yet.<br>Search for a user to start chatting.</div>';
-    return;
-  }
-  el.innerHTML = state.chats.map(chat => {
-    const isGroup = chat.is_group;
-    const color = isGroup ? '#6366f1' : (chat.other_user?.avatar_color || '#6366f1');
-    const name = chat.display_name || 'Unknown';
-    const preview = chat.last_message ? (chat.last_sender !== state.user.username ? `${chat.last_sender}: ` : '') + chat.last_message : 'No messages yet';
-    const time = chat.last_message_at ? formatTime(chat.last_message_at) : '';
-    return `<div class="chat-item${state.activeChatId === chat.id ? ' active' : ''}" onclick="openChat('${chat.id}')">
-      ${avatarHTML(name, color, isGroup)}
+  const el=document.getElementById('chat-list');
+  if (!state.chats.length) { el.innerHTML='<div class="no-chats">No conversations yet.<br>Search for a user to start chatting.</div>'; return; }
+  el.innerHTML=state.chats.map(chat=>{
+    const isGroup=chat.is_group;
+    const color=isGroup?'#6366f1':(chat.other_user?.avatar_color||'#6366f1');
+    const name=chat.display_name||'Unknown';
+    const avatarN=isGroup?'◆':(chat.other_user?.first_name||chat.other_user?.username||name);
+    const preview=chat.last_message?((chat.last_sender&&chat.last_sender!==state.user.username)?`${chat.last_sender}: `:'') +chat.last_message:'No messages yet';
+    const time=chat.last_message_at?formatTime(chat.last_message_at):'';
+    const unread=state.unread[chat.id]||0;
+    return `<div class="chat-item${state.activeChatId===chat.id?' active':''}" onclick="openChat('${chat.id}')">
+      ${avatarHTML(avatarN,color,isGroup)}
       <div class="chat-info">
         <div class="chat-name">${esc(name)}</div>
         <div class="chat-preview">${esc(preview)}</div>
       </div>
-      <div class="chat-time">${time}</div>
+      <div class="chat-meta">
+        <div class="chat-time">${time}</div>
+        ${unread?`<div class="unread-badge">${unread>99?'99+':unread}</div>`:''}
+      </div>
     </div>`;
   }).join('');
 }
 
 async function openChat(chatId) {
-  state.activeChatId = chatId;
-  state.typingUsers = {};
+  state.activeChatId=chatId;
+  state.typingUsers={};
+  state.unread[chatId]=0;
   renderChatList();
 
-  const chat = state.chats.find(c => c.id === chatId);
-  const isGroup = chat.is_group;
-  const name = chat.display_name;
-  const color = isGroup ? '#6366f1' : (chat.other_user?.avatar_color || '#6366f1');
+  const chat=state.chats.find(c=>c.id===chatId);
+  const isGroup=chat.is_group, name=chat.display_name;
+  const color=isGroup?'#6366f1':(chat.other_user?.avatar_color||'#6366f1');
+  const avatarN=isGroup?'◆':(chat.other_user?.first_name||chat.other_user?.username||name);
 
-  document.getElementById('empty-state').style.display = 'none';
-  const cv = document.getElementById('chat-view');
-  cv.style.display = 'flex';
+  document.getElementById('empty-state').style.display='none';
+  const cv=document.getElementById('chat-view'); cv.style.display='flex';
+  const av=document.getElementById('chat-avatar'); av.style.background=color; av.textContent=isGroup?'◆':(avatarN?.[0]||'?').toUpperCase();
+  document.getElementById('chat-header-name').textContent=name;
+  document.getElementById('chat-header-sub').textContent=isGroup?`${chat.members?.length||''} members`:(chat.other_user?`@${chat.other_user.username}`:'');
+  document.getElementById('typing-indicator').textContent='';
 
-  const av = document.getElementById('chat-avatar');
-  av.style.background = color;
-  av.textContent = isGroup ? '◆' : (name?.[0] || '?').toUpperCase();
-  document.getElementById('chat-header-name').textContent = name;
-  document.getElementById('chat-header-sub').textContent = isGroup
-    ? `${chat.members?.length || ''} members`
-    : chat.other_user?.username || '';
-  document.getElementById('typing-indicator').textContent = '';
-
-  state.messages = await api(`/api/chats/${chatId}/messages`, null, 'GET');
+  state.messages=await api(`/api/chats/${chatId}/messages`,null,'GET');
   renderMessages();
 
+  // Mark as read
+  sendRead(chatId);
+
+  document.getElementById('main').classList.add('show');
+  document.getElementById('sidebar').classList.add('hidden');
   document.getElementById('msg-input').focus();
 }
 
+function goBack() {
+  document.getElementById('main').classList.remove('show');
+  document.getElementById('sidebar').classList.remove('hidden');
+  state.activeChatId=null;
+}
+
 function renderMessages() {
-  const wrap = document.getElementById('messages-wrap');
-  wrap.innerHTML = '';
-  let lastDate = null;
-  let lastSender = null;
-  let groupEl = null;
-
-  state.messages.forEach((msg, i) => {
-    const date = new Date(msg.created_at * 1000).toDateString();
-    if (date !== lastDate) {
-      const div = document.createElement('div');
-      div.className = 'date-divider';
-      div.innerHTML = `<span>${formatDate(msg.created_at)}</span>`;
-      wrap.appendChild(div);
-      lastDate = date;
-      lastSender = null;
+  const wrap=document.getElementById('messages-wrap'); wrap.innerHTML='';
+  let lastDate=null, lastSenderId=null, groupEl=null;
+  state.messages.forEach(msg=>{
+    const date=new Date(msg.created_at*1000).toDateString();
+    if (date!==lastDate) {
+      const d=document.createElement('div'); d.className='date-divider';
+      d.innerHTML=`<span>${formatDate(msg.created_at)}</span>`; wrap.appendChild(d);
+      lastDate=date; lastSenderId=null;
     }
-
-    const isMine = msg.sender_id === state.user.id;
-    const newGroup = msg.sender_id !== lastSender;
-
+    const isMine=msg.sender_id===state.user.id, newGroup=msg.sender_id!==lastSenderId;
     if (newGroup) {
-      groupEl = document.createElement('div');
-      groupEl.className = `msg-group ${isMine ? 'mine' : 'other'}`;
-      const senderRow = document.createElement('div');
-      senderRow.className = 'msg-sender-row';
-      if (!isMine) {
-        senderRow.innerHTML = `${avatarHTML(msg.username, msg.avatar_color, false, true)}<span class="msg-sender-name" style="color:${msg.avatar_color}">${esc(msg.username)}</span><span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
-      } else {
-        senderRow.innerHTML = `<span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
-      }
-      groupEl.appendChild(senderRow);
-      const bubblesEl = document.createElement('div');
-      bubblesEl.className = 'msg-bubble-wrap';
-      groupEl.appendChild(bubblesEl);
-      wrap.appendChild(groupEl);
-      lastSender = msg.sender_id;
+      groupEl=document.createElement('div');
+      groupEl.className=`msg-group ${isMine?'mine':'other'}`;
+      groupEl.dataset.senderId=msg.sender_id;
+      const sr=document.createElement('div'); sr.className='msg-sender-row';
+      const sdn=msg.first_name?(msg.first_name+(msg.last_name?' '+msg.last_name:'')):msg.username;
+      if (!isMine) sr.innerHTML=`${avatarHTML(msg.first_name||msg.username,msg.avatar_color,false,true)}<span class="msg-sender-name" style="color:${msg.avatar_color}">${esc(sdn)}</span><span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
+      else sr.innerHTML=`<span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
+      groupEl.appendChild(sr);
+      const bw=document.createElement('div'); bw.className='msg-bubble-wrap'; groupEl.appendChild(bw);
+      wrap.appendChild(groupEl); lastSenderId=msg.sender_id;
     }
-
-    const bubblesEl = groupEl.querySelector('.msg-bubble-wrap');
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
-    bubble.textContent = msg.content;
-    bubblesEl.appendChild(bubble);
+    const bw=groupEl.querySelector('.msg-bubble-wrap');
+    const bubble=document.createElement('div'); bubble.className='msg-bubble'; bubble.dataset.msgId=msg.id;
+    bubble.innerHTML=`<span class="msg-bubble-text">${esc(msg.content)}</span>` + (msg.sender_id===state.user.id?statusIcon(msg.status):'');
+    bw.appendChild(bubble);
   });
-
-  wrap.scrollTop = wrap.scrollHeight;
+  wrap.scrollTop=wrap.scrollHeight;
 }
 
-function appendMessage(msg, scroll = true) {
-  const wrap = document.getElementById('messages-wrap');
-  const isMine = msg.sender_id === state.user.id;
-
-  // Check if we can append to the last group
-  const lastGroup = wrap.querySelector('.msg-group:last-child');
-  if (lastGroup && lastGroup.classList.contains(isMine ? 'mine' : 'other')) {
-    const lastSenderId = isMine ? state.user.id : msg.sender_id;
-    const senderMatch = isMine || lastGroup.dataset.senderId === msg.sender_id;
-    if (senderMatch) {
-      const bubblesEl = lastGroup.querySelector('.msg-bubble-wrap');
-      if (bubblesEl) {
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-        bubble.textContent = msg.content;
-        bubblesEl.appendChild(bubble);
-        if (scroll) wrap.scrollTop = wrap.scrollHeight;
-        return;
-      }
+function appendMessage(msg, scroll=true) {
+  const wrap=document.getElementById('messages-wrap');
+  const isMine=msg.sender_id===state.user.id;
+  const lastGroup=wrap.querySelector('.msg-group:last-child');
+  if (lastGroup&&lastGroup.dataset.senderId===msg.sender_id) {
+    const bw=lastGroup.querySelector('.msg-bubble-wrap');
+    if (bw) {
+      const bubble=document.createElement('div'); bubble.className='msg-bubble'; bubble.dataset.msgId=msg.id;
+      bubble.innerHTML=`<span class="msg-bubble-text">${esc(msg.content)}</span>`+(isMine?statusIcon(msg.status):'');
+      bw.appendChild(bubble);
+      if (scroll) wrap.scrollTop=wrap.scrollHeight;
+      return;
     }
   }
-
-  // New group
-  const groupEl = document.createElement('div');
-  groupEl.className = `msg-group ${isMine ? 'mine' : 'other'}`;
-  groupEl.dataset.senderId = msg.sender_id;
-  const senderRow = document.createElement('div');
-  senderRow.className = 'msg-sender-row';
-  if (!isMine) {
-    senderRow.innerHTML = `${avatarHTML(msg.username, msg.avatar_color, false, true)}<span class="msg-sender-name" style="color:${msg.avatar_color}">${esc(msg.username)}</span><span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
-  } else {
-    senderRow.innerHTML = `<span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
-  }
-  groupEl.appendChild(senderRow);
-  const bubblesEl = document.createElement('div');
-  bubblesEl.className = 'msg-bubble-wrap';
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.textContent = msg.content;
-  bubblesEl.appendChild(bubble);
-  groupEl.appendChild(bubblesEl);
-  wrap.appendChild(groupEl);
-
-  if (scroll) wrap.scrollTop = wrap.scrollHeight;
+  const groupEl=document.createElement('div');
+  groupEl.className=`msg-group ${isMine?'mine':'other'}`; groupEl.dataset.senderId=msg.sender_id;
+  const sr=document.createElement('div'); sr.className='msg-sender-row';
+  const sdn=msg.first_name?(msg.first_name+(msg.last_name?' '+msg.last_name:'')):msg.username;
+  if (!isMine) sr.innerHTML=`${avatarHTML(msg.first_name||msg.username,msg.avatar_color,false,true)}<span class="msg-sender-name" style="color:${msg.avatar_color}">${esc(sdn)}</span><span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
+  else sr.innerHTML=`<span class="msg-sender-time">${formatTimeShort(msg.created_at)}</span>`;
+  groupEl.appendChild(sr);
+  const bw=document.createElement('div'); bw.className='msg-bubble-wrap';
+  const bubble=document.createElement('div'); bubble.className='msg-bubble'; bubble.dataset.msgId=msg.id;
+  bubble.innerHTML=`<span class="msg-bubble-text">${esc(msg.content)}</span>`+(isMine?statusIcon(msg.status):'');
+  bw.appendChild(bubble); groupEl.appendChild(bw); wrap.appendChild(groupEl);
+  if (scroll) wrap.scrollTop=wrap.scrollHeight;
 }
 
-// ─── Send ─────────────────────────────────────────────────────────────────────
+function updateMsgStatusDOM(msgId, status) {
+  const bubble=document.querySelector(`[data-msg-id="${msgId}"]`);
+  if (!bubble) return;
+  const existing=bubble.querySelector('.msg-status');
+  if (existing) existing.outerHTML=statusIcon(status).match(/<span.*<\/span>/s)?.[0]||'';
+  else bubble.insertAdjacentHTML('beforeend', statusIcon(status));
+}
+
+// ── Send ───────────────────────────────────────────────────────────────────────
 function sendMessage() {
-  if (!state.activeChatId || !ws || ws.readyState !== 1) return;
-  const input = document.getElementById('msg-input');
-  const content = input.value.trim();
-  if (!content) return;
-  ws.send(JSON.stringify({ type: 'message', chat_id: state.activeChatId, content }));
-  input.value = '';
-  autoResize(input);
-  sendTyping(false);
+  if (!state.activeChatId||!ws||ws.readyState!==1) return;
+  const input=document.getElementById('msg-input');
+  const content=input.value.trim(); if (!content) return;
+  ws.send(JSON.stringify({type:'message',chat_id:state.activeChatId,content}));
+  input.value=''; autoResize(input); sendTyping(false);
 }
+function handleKey(e) { if (e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,140)+'px'; }
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
-}
-
-// ─── Search ───────────────────────────────────────────────────────────────────
+// ── Search ─────────────────────────────────────────────────────────────────────
 let searchTimer;
 async function searchUsers(q) {
-  clearTimeout(searchTimer);
-  if (!q.trim()) { document.getElementById('search-results').innerHTML = ''; return; }
-  searchTimer = setTimeout(async () => {
-    const users = await api(`/api/users/search?q=${encodeURIComponent(q)}`, null, 'GET');
-    const el = document.getElementById('search-results');
-    el.innerHTML = users.map(u => `<div class="search-result-item" onclick="startDMFromSearch('${u.id}')">
-      ${avatarHTML(u.username, u.avatar_color, false, true)}<span>${esc(u.username)}</span>
-    </div>`).join('') || '<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
+  clearTimeout(searchTimer); if (!q.trim()){document.getElementById('search-results-main').innerHTML='';return;}
+  searchTimer=setTimeout(async()=>{
+    const users=await api(`/api/users/search?q=${encodeURIComponent(q)}`,null,'GET');
+    const el=document.getElementById('search-results-main');
+    el.innerHTML=users.map(u=>`<div class="search-result-item" onclick="startDMFromSearch('${u.id}')">${avatarHTML(u.first_name||u.username,u.avatar_color,false,true)}<span>${esc(displayName(u))}</span></div>`).join('')||'<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
     el.classList.add('show');
-  }, 250);
+  },250);
 }
-
 async function startDMFromSearch(userId) {
-  document.getElementById('user-search').value = '';
-  document.getElementById('search-results').classList.remove('show');
-  const { id } = await api('/api/chats/dm', { user_id: userId });
-  await loadChats();
-  openChat(id);
+  document.getElementById('user-search').value=''; document.getElementById('search-results-main').classList.remove('show');
+  const {id}=await api('/api/chats/dm',{user_id:userId}); await loadChats(); openChat(id);
 }
 
-// ─── DM Modal ─────────────────────────────────────────────────────────────────
+// ── DM Modal ───────────────────────────────────────────────────────────────────
 function showDMModal() {
-  state.dmTarget = null;
-  document.getElementById('dm-search').value = '';
-  document.getElementById('dm-results').innerHTML = '';
-  document.getElementById('dm-selected').innerHTML = '';
-  document.getElementById('dm-open-btn').disabled = true;
+  state.dmTarget=null;
+  ['dm-search','dm-selected'].forEach(id=>{const e=document.getElementById(id);if(e)e.value||e.innerHTML&&(e.innerHTML='');});
+  document.getElementById('dm-search').value=''; document.getElementById('dm-results').innerHTML='';
+  document.getElementById('dm-selected').innerHTML=''; document.getElementById('dm-open-btn').disabled=true;
   document.getElementById('dm-modal').classList.add('show');
-  setTimeout(() => document.getElementById('dm-search').focus(), 100);
+  setTimeout(()=>document.getElementById('dm-search').focus(),100);
 }
-
 async function searchDMUsers(q) {
-  if (!q.trim()) { document.getElementById('dm-results').innerHTML = ''; return; }
-  const users = await api(`/api/users/search?q=${encodeURIComponent(q)}`, null, 'GET');
-  const el = document.getElementById('dm-results');
-  el.innerHTML = users.map(u => `<div class="search-result-item" onclick="selectDMUser('${u.id}', '${u.username}', '${u.avatar_color}')">
-    ${avatarHTML(u.username, u.avatar_color, false, true)}<span>${esc(u.username)}</span>
-  </div>`).join('') || '<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
+  if (!q.trim()){document.getElementById('dm-results').innerHTML='';return;}
+  const users=await api(`/api/users/search?q=${encodeURIComponent(q)}`,null,'GET');
+  const el=document.getElementById('dm-results');
+  el.innerHTML=users.map(u=>`<div class="search-result-item" onclick="selectDMUser('${u.id}','${esc(displayName(u))}','${u.avatar_color}','${esc(u.first_name||u.username)}')">${avatarHTML(u.first_name||u.username,u.avatar_color,false,true)}<span>${esc(displayName(u))}</span></div>`).join('')||'<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
   el.classList.add('show');
 }
-
-function selectDMUser(id, username, color) {
-  state.dmTarget = { id, username, color };
-  document.getElementById('dm-results').classList.remove('show');
-  document.getElementById('dm-search').value = '';
-  document.getElementById('dm-selected').innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:8px 0">${avatarHTML(username, color, false, true)}<span style="font-size:14px;font-weight:500">${esc(username)}</span></div>`;
-  document.getElementById('dm-open-btn').disabled = false;
+function selectDMUser(id,name,color,avatarLetter) {
+  state.dmTarget={id,name,color,avatarLetter};
+  document.getElementById('dm-results').classList.remove('show'); document.getElementById('dm-search').value='';
+  document.getElementById('dm-selected').innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:8px 0">${avatarHTML(avatarLetter,color,false,true)}<span style="font-size:14px;font-weight:500">${esc(name)}</span></div>`;
+  document.getElementById('dm-open-btn').disabled=false;
 }
-
 async function openDM() {
-  if (!state.dmTarget) return;
-  closeModal('dm-modal');
-  const { id } = await api('/api/chats/dm', { user_id: state.dmTarget.id });
-  await loadChats();
-  openChat(id);
+  if (!state.dmTarget) return; closeModal('dm-modal');
+  const {id}=await api('/api/chats/dm',{user_id:state.dmTarget.id}); await loadChats(); openChat(id);
 }
 
-// ─── Group Modal ──────────────────────────────────────────────────────────────
+// ── Group Modal ────────────────────────────────────────────────────────────────
 function showGroupModal() {
-  state.groupMembers = [];
-  document.getElementById('group-name').value = '';
-  document.getElementById('group-search').value = '';
-  document.getElementById('group-results').innerHTML = '';
-  document.getElementById('group-chips').innerHTML = '';
+  state.groupMembers=[];
+  ['group-name','group-search'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('group-results').innerHTML=''; document.getElementById('group-chips').innerHTML='';
   document.getElementById('group-modal').classList.add('show');
-  setTimeout(() => document.getElementById('group-name').focus(), 100);
+  setTimeout(()=>document.getElementById('group-name').focus(),100);
 }
-
 async function searchGroupUsers(q) {
-  if (!q.trim()) { document.getElementById('group-results').innerHTML = ''; return; }
-  const users = await api(`/api/users/search?q=${encodeURIComponent(q)}`, null, 'GET');
-  const filtered = users.filter(u => !state.groupMembers.find(m => m.id === u.id));
-  const el = document.getElementById('group-results');
-  el.innerHTML = filtered.map(u => `<div class="search-result-item" onclick="addGroupMember('${u.id}', '${u.username}', '${u.avatar_color}')">
-    ${avatarHTML(u.username, u.avatar_color, false, true)}<span>${esc(u.username)}</span>
-  </div>`).join('') || '<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
+  if (!q.trim()){document.getElementById('group-results').innerHTML='';return;}
+  const users=await api(`/api/users/search?q=${encodeURIComponent(q)}`,null,'GET');
+  const filtered=users.filter(u=>!state.groupMembers.find(m=>m.id===u.id));
+  const el=document.getElementById('group-results');
+  el.innerHTML=filtered.map(u=>`<div class="search-result-item" onclick="addGroupMember('${u.id}','${esc(displayName(u))}','${u.avatar_color}','${esc(u.first_name||u.username)}')">${avatarHTML(u.first_name||u.username,u.avatar_color,false,true)}<span>${esc(displayName(u))}</span></div>`).join('')||'<div style="padding:10px 12px;color:var(--text-3);font-size:13px">No users found</div>';
   el.classList.add('show');
 }
-
-function addGroupMember(id, username, color) {
-  if (state.groupMembers.find(m => m.id === id)) return;
-  state.groupMembers.push({ id, username, color });
-  document.getElementById('group-search').value = '';
-  document.getElementById('group-results').classList.remove('show');
+function addGroupMember(id,name,color,avatarLetter) {
+  if (state.groupMembers.find(m=>m.id===id)) return;
+  state.groupMembers.push({id,name,color,avatarLetter});
+  document.getElementById('group-search').value=''; document.getElementById('group-results').classList.remove('show');
   renderGroupChips();
 }
-
-function removeGroupMember(id) {
-  state.groupMembers = state.groupMembers.filter(m => m.id !== id);
-  renderGroupChips();
-}
-
+function removeGroupMember(id) { state.groupMembers=state.groupMembers.filter(m=>m.id!==id); renderGroupChips(); }
 function renderGroupChips() {
-  document.getElementById('group-chips').innerHTML = state.groupMembers.map(m =>
-    `<div class="chip">${avatarHTML(m.username, m.color, false, true)}<span>${esc(m.username)}</span><span class="chip-remove" onclick="removeGroupMember('${m.id}')">×</span></div>`
-  ).join('');
+  document.getElementById('group-chips').innerHTML=state.groupMembers.map(m=>`<div class="chip">${avatarHTML(m.avatarLetter,m.color,false,true)}<span>${esc(m.name)}</span><span class="chip-remove" onclick="removeGroupMember('${m.id}')">×</span></div>`).join('');
 }
-
 async function createGroup() {
-  const name = document.getElementById('group-name').value.trim();
-  if (!name) { alert('Enter a group name'); return; }
-  closeModal('group-modal');
-  const { id } = await api('/api/chats/group', { name, member_ids: state.groupMembers.map(m => m.id) });
-  await loadChats();
-  openChat(id);
+  const name=document.getElementById('group-name').value.trim();
+  if (!name){alert('Enter a group name');return;} closeModal('group-modal');
+  const {id}=await api('/api/chats/group',{name,member_ids:state.groupMembers.map(m=>m.id)}); await loadChats(); openChat(id);
 }
 
-// ─── Modal utils ──────────────────────────────────────────────────────────────
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+// ── Modals ─────────────────────────────────────────────────────────────────────
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-backdrop').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('show');});});
 
-document.querySelectorAll('.modal-backdrop').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
-});
-
-// ─── Formatting ───────────────────────────────────────────────────────────────
-function formatTime(unix) {
-  const d = new Date(unix * 1000);
-  const now = new Date();
-  if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  if (now - d < 7 * 86400000) return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+// ── Profile ────────────────────────────────────────────────────────────────────
+function openProfile() {
+  if (!state.user) return;
+  document.getElementById('pf-firstname').value=state.user.first_name||'';
+  document.getElementById('pf-lastname').value=state.user.last_name||'';
+  document.getElementById('pf-username').value=state.user.username||'';
+  document.getElementById('pf-msg').textContent=''; document.getElementById('pf-username-hint').textContent='';
+  const a=document.getElementById('profile-avatar'); a.style.background=state.user.avatar_color||'#6366f1'; a.textContent=(state.user.first_name||state.user.username||'?')[0].toUpperCase();
+  document.getElementById('profile-username-display').textContent='@'+state.user.username;
+  document.getElementById('profile-panel').classList.add('show');
 }
+function closeProfile(){document.getElementById('profile-panel').classList.remove('show');}
 
-function formatTimeShort(unix) {
-  return new Date(unix * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function formatDate(unix) {
-  const d = new Date(unix * 1000);
-  const now = new Date();
-  if (d.toDateString() === now.toDateString()) return 'Today';
-  if (new Date(now - 86400000).toDateString() === d.toDateString()) return 'Yesterday';
-  return d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
-}
-
-function esc(str) {
-  if (!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ─── Live username check ──────────────────────────────────────────────────────
-// USERNAME_PLANS mirrors server constants — update both together when adding paid tiers
-const USERNAME_PLANS = { elite: 2, pro: 3, plus: 4, free: 5 };
-let usernameTimer;
-
-function checkUsername(val) {
-  const hint = document.getElementById('username-hint');
-  hint.textContent = '';
-  clearTimeout(usernameTimer);
-  if (!val) return;
-
-  // Invalid characters
-  if (!/^[a-zA-Z0-9_]+$/.test(val)) {
-    hint.style.color = '#ef4444';
-    hint.textContent = 'Only letters, numbers and underscores allowed';
-    return;
-  }
-
-  // Too long
-  if (val.length > 32) {
-    hint.style.color = '#ef4444';
-    hint.textContent = 'Username too long (max 32 characters)';
-    return;
-  }
-
-  // Short — reserved for paid plans, show after 2s
-  if (val.length >= USERNAME_PLANS.elite && val.length < USERNAME_PLANS.free) {
-    usernameTimer = setTimeout(() => {
-      hint.style.color = '#f59e0b';
-      hint.textContent = `Usernames under ${USERNAME_PLANS.free} characters are not available yet`;
-    }, 2000);
-    return;
-  }
-
-  if (val.length < USERNAME_PLANS.free) return;
-
-  // Check availability after 600ms
-  usernameTimer = setTimeout(async () => {
+let pfUnameTimer;
+function checkProfileUsername(val) {
+  const hint=document.getElementById('pf-username-hint'); hint.textContent=''; clearTimeout(pfUnameTimer);
+  if (!val||val===state.user.username) return;
+  if (!/^[a-zA-Z0-9_]+$/.test(val)){hint.style.color='#ef4444';hint.textContent='Only letters, numbers, underscores';return;}
+  if (val.length>32){hint.style.color='#ef4444';hint.textContent='Max 32 characters';return;}
+  if (val.length<5){hint.style.color='#f59e0b';hint.textContent='Usernames under 5 characters are reserved';return;}
+  pfUnameTimer=setTimeout(async()=>{
+    hint.style.color='var(--text-3)';hint.textContent='Checking...';
     try {
-      hint.style.color = 'var(--text-3)';
-      hint.textContent = 'Checking...';
-      const data = await fetch(`/api/users/check-username?username=${encodeURIComponent(val)}`).then(r => r.json());
-      if (data.available) {
-        hint.style.color = '#10b981';
-        hint.textContent = `@${val} is available ✓`;
-      } else {
-        hint.style.color = '#ef4444';
-        hint.textContent = `@${val} is already taken`;
-      }
-    } catch { hint.textContent = ''; }
-  }, 600);
+      const d=await fetch(`/api/users/check-username?username=${encodeURIComponent(val)}`).then(r=>r.json());
+      if (d.banned){hint.style.color='#ef4444';hint.textContent='This username is not allowed';}
+      else if (d.available){hint.style.color='#10b981';hint.textContent=`@${val} is available ✓`;}
+      else {hint.style.color='#ef4444';hint.textContent=`@${val} is already taken`;}
+    } catch {hint.textContent='';}
+  },600);
 }
 
-// Enter key for auth inputs
-document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('reg-password').addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
+async function saveProfile() {
+  const btn=document.getElementById('pf-save-btn'), msg=document.getElementById('pf-msg');
+  msg.textContent=''; btn.disabled=true;
+  const body={};
+  const fn=document.getElementById('pf-firstname').value.trim();
+  const ln=document.getElementById('pf-lastname').value.trim();
+  const un=document.getElementById('pf-username').value.trim();
+  if (fn!==(state.user.first_name||'')) body.first_name=fn;
+  if (ln!==(state.user.last_name||'')) body.last_name=ln;
+  if (un!==state.user.username) body.username=un;
+  if (!Object.keys(body).length){msg.className='profile-msg err';msg.textContent='No changes to save';btn.disabled=false;return;}
+  try {
+    const updated=await api('/api/me',body,'PATCH');
+    state.user={...state.user,...updated}; localStorage.setItem('user',JSON.stringify(state.user));
+    updateSidebarUser();
+    document.getElementById('profile-username-display').textContent='@'+state.user.username;
+    msg.className='profile-msg ok'; msg.textContent='Saved successfully ✓';
+  } catch(e){msg.className='profile-msg err';msg.textContent=e.message;}
+  btn.disabled=false;
+}
+
+// ── Username check (register) ──────────────────────────────────────────────────
+const USERNAME_PLANS={elite:2,pro:3,plus:4,free:5};
+let usernameTimer;
+function checkUsername(val) {
+  const hint=document.getElementById('username-hint'); hint.textContent=''; clearTimeout(usernameTimer); if (!val) return;
+  if (!/^[a-zA-Z0-9_]+$/.test(val)){hint.style.color='#ef4444';hint.textContent='Only letters, numbers and underscores allowed';return;}
+  if (val.length>32){hint.style.color='#ef4444';hint.textContent='Username too long (max 32 characters)';return;}
+  if (val.length<USERNAME_PLANS.free) {
+    if (val.length>=USERNAME_PLANS.elite) usernameTimer=setTimeout(()=>{hint.style.color='#f59e0b';hint.textContent=`Usernames under ${USERNAME_PLANS.free} characters are not available yet`;},1500);
+    return;
+  }
+  usernameTimer=setTimeout(async()=>{
+    hint.style.color='var(--text-3)'; hint.textContent='Checking...';
+    try {
+      const d=await fetch(`/api/users/check-username?username=${encodeURIComponent(val)}`).then(r=>r.json());
+      if (d.banned){hint.style.color='#ef4444';hint.textContent='This username is not allowed';}
+      else if (d.available){hint.style.color='#10b981';hint.textContent=`@${val} is available ✓`;}
+      else {hint.style.color='#ef4444';hint.textContent=`@${val} is already taken`;}
+    } catch {hint.textContent='';}
+  },600);
+}
+
+// ── Formatting ─────────────────────────────────────────────────────────────────
+function formatTime(unix){const d=new Date(unix*1000),now=new Date();if(d.toDateString()===now.toDateString())return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(now-d<7*86400000)return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];return d.toLocaleDateString([],{month:'short',day:'numeric'});}
+function formatTimeShort(unix){return new Date(unix*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function formatDate(unix){const d=new Date(unix*1000),now=new Date();if(d.toDateString()===now.toDateString())return'Today';if(new Date(now-86400000).toDateString()===d.toDateString())return'Yesterday';return d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});}
+function esc(str){if(!str)return'';return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Enter key auth ─────────────────────────────────────────────────────────────
+document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('reg-password').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
 </script>
 </body>
 </html>
